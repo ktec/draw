@@ -10,6 +10,9 @@ const init = (socket, root, id) => {
     count: 0
   }
 
+  const width = Math.max(700, innerWidth),
+       height = Math.max(500, innerHeight)
+
   const channel = setUpChannel(socket, state, {id: id, fps: 60})
 
   const renderPath = ({id, path}) => `<path id="${id}" d="${path}"></path>`
@@ -30,8 +33,18 @@ const init = (socket, root, id) => {
   var line = d3.line()
       .curve(d3.curveBasis)
 
-  var svg = d3.select(root)
-      .call(d3.drag()
+  const drawing = d3.select(root)
+
+  const svg = drawing.append("svg")
+                      .attr("width", width)
+                      .attr("height", height)
+
+  const background = svg.append("rect")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .attr("fill", "#d5dae6");
+
+  svg.call(d3.drag()
           .container(function(){
             // console.log(this)
             return this
@@ -48,6 +61,21 @@ const init = (socket, root, id) => {
           //     .on("drag", (d, i) => this.dragged(d, i))
           //     .on("end", (d, i) => this.dragended(d, i))
           // );
+
+    svg.append("svg:image")
+      .attr('x', width - 530)
+      .attr('y', height - 80)
+      .attr('width', 519)
+      .attr('height', 71)
+      .attr("xlink:href","/images/phoenix.png")
+
+    svg.append("svg:a")
+      .attr("xlink:href", function(d){ return "http://www.phoenixframework.org/docs" })
+      .append("svg:text")
+      .text(function(d) { return "Get Started"; })
+      .attr("dy", height - 40)
+      .attr("dx", width - 600)
+      .attr("text-anchor", "middle")
 
   function dragstarted() {
     var d = d3.event.subject,

@@ -7,4 +7,4 @@ const token = document.head.querySelector("[name=token]").content
 const socket = new Socket("/socket", {params: {token: token}})
 socket.connect()
 
-draw.init(socket, "#drawing svg", token)
+draw.init(socket, "#drawing", token)
