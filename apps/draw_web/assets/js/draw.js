@@ -15,21 +15,6 @@ const init = (socket, root, id) => {
 
   const channel = setUpChannel(socket, state, {id: id, fps: 60})
 
-  const renderPath = ({id, path}) => `<path id="${id}" d="${path}"></path>`
-
-  channel.on("drawing:update", response => {
-    // console.log("drawing:update revieved", response)
-    Object.keys(response).map((key) => {
-      const payload = response[key].metas[0]
-      const paths = payload["paths"];
-      (paths||[]).map(({path}) => {
-        const output = renderPath(path)
-        document.querySelector(root)
-         .insertAdjacentHTML('beforeend', output)
-      })
-    })
-  })
-
   var line = d3.line()
       .curve(d3.curveBasis)
 
@@ -104,6 +89,19 @@ const init = (socket, root, id) => {
     state.count++
     channel.push("drawing:update", {path: {id: state.count, path: path}})
   }
+
+  channel.on("drawing:update", response => {
+    // console.log("drawing:update revieved", response)
+    Object.keys(response).map((key) => {
+      const payload = response[key].metas[0]
+      const paths = payload["paths"];
+      (paths||[]).map(({path}) => {
+        svg.append('path')
+          .attr('id', path.id)
+          .attr('d', path.path)
+      })
+    })
+  })
 
 }
 
