@@ -8,6 +8,9 @@ defmodule DrawWeb.Application do
     children = [
       # Start the endpoint when the application starts
       supervisor(DrawWeb.Endpoint, []),
+      supervisor(DrawWeb.Presence, []),
+      # worker(Draw.GameState, []),
+      # worker(Draw.WorldBroadcaster, [])
       # Start your own worker by calling: DrawWeb.Worker.start_link(arg1, arg2, arg3)
       # worker(DrawWeb.Worker, [arg1, arg2, arg3]),
     ]

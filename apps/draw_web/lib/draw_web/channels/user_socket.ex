@@ -3,6 +3,7 @@ defmodule DrawWeb.UserSocket do
 
   ## Channels
   # channel "room:*", DrawWeb.RoomChannel
+  channel "drawing:*", DrawWeb.DrawingChannel
 
   ## Transports
   transport :websocket, Phoenix.Transports.WebSocket
@@ -19,6 +20,15 @@ defmodule DrawWeb.UserSocket do
   #
   # See `Phoenix.Token` documentation for examples in
   # performing token verification on connect.
+  def connect(%{"token" => token}, socket) do
+    # max_age: 1209600 is equivalent to two weeks in seconds
+    auth = Phoenix.Token.verify(socket, "token", token, max_age: 1209600)
+    case auth do
+      {:ok, user_id} -> {:ok, assign(socket, :user_id, user_id)}
+      {:error, _} -> :error
+    end
+  end
+
   def connect(_params, socket) do
     {:ok, socket}
   end
